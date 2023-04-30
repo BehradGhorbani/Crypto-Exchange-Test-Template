@@ -22,7 +22,7 @@ const configs = {
         makerOrdersWeight: 100,
         firstMakerOrderWeight: 100,
         makerPricePercent: 0.005,
-        orderCompleteTime: 5000,
+        orderCompleteTime: 60000,
         tradeDomElements: domElements.exnovin.tradeElements,
         loginDomElements: domElements.exnovin.loginElements,
         walletElements: domElements.exnovin.walletElements,
