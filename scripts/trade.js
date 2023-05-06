@@ -45,6 +45,7 @@ class TradeScript {
         const tradeData = []
 
         for (const pair of this.config.pairs) {
+            console.log("start of trading")
             const tokens = pair.split('_');
 
             const lowestSellOrder = (await this.orderBookActions.getSalesPricesByMarket(pair)).at(-1);

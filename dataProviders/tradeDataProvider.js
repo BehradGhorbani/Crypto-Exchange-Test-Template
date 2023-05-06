@@ -9,7 +9,7 @@ class TradeDataProvider {
     async uiMarketBuyToken(market) {
         try {
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
-            await this.page.waitForNavigation();
+            await this.page.waitForTimeout(5000);
 
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.orderBtn);
             const marketOrderBtn = await this.page.$x(this.config.tradeDomElements.marketOrder.orderBtn)
@@ -51,7 +51,7 @@ class TradeDataProvider {
     async uiMarketSellToken(market) {
         try {
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
-            await this.page.waitForNavigation();
+            await this.page.waitForTimeout(5000);
 
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.orderBtn);
             const marketOrderBtn = await this.page.$x(this.config.tradeDomElements.marketOrder.orderBtn)
@@ -73,7 +73,7 @@ class TradeDataProvider {
             await this.page.waitForTimeout(2000);
 
             await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
-            await this.page.waitForNavigation();
+            await this.page.waitForTimeout(2000);
 
             await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
 

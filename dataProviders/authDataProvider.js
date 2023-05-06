@@ -8,7 +8,7 @@ class AuthDataProvider {
         try {
 
             await this.page.goto( this.config.routes.url + this.config.routes.loginPath );
-            await this.page.waitForTimeout(10000);
+            await this.page.waitForTimeout(5000);
 
             await this.page.waitForXPath( this.config.loginDomElements.usernameField );
             const usernameField = await this.page.$x(this.config.loginDomElements.usernameField)
