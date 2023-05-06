@@ -1,4 +1,4 @@
-const {TestModes} = require("../utils/util");
+const {ScrapeModes} = require("../utils/util");
 const tradeDataProvider = require('../dataProviders/tradeDataProvider');
 
 class TradeActions {
@@ -9,19 +9,19 @@ class TradeActions {
     }
 
     async uiMarketBuyToken(market) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.tradeDataProvider.uiMarketBuyToken(market);
         }
     }
 
     async uiMarketSellToken(market) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.tradeDataProvider.uiMarketSellToken(market);
         }
     }
 
     async uiLimitBuyToken(market, limitPrice) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.tradeDataProvider.uiLimitBuyToken(market,limitPrice);
         }
     }

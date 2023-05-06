@@ -1,4 +1,4 @@
-const {TestModes} = require("../utils/util");
+const {ScrapeModes} = require("../utils/util");
 const orderBookDataProvider = require('../dataProviders/orderBookDataProvider');
 
 class OrderBookActions {
@@ -9,16 +9,16 @@ class OrderBookActions {
     }
 
     async getSalesPricesByMarket(market) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.orderBookDataProvider.uiGetSalesPricesByMarket(market);
         }
     }
 
     async getBuysPricesByMarket(market) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.orderBookDataProvider.uiGetBuysPricesByMarket(market);
         }
     }
 }
 
-module.exports = ( page, config ) => new OrderBookActions( page, config );
+module.exports = async ( page, config ) => new OrderBookActions( page, config );

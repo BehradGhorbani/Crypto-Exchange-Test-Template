@@ -1,8 +1,13 @@
 const persianjs = require("persianjs");
 
-const TestModes = {
+const ScrapeModes = {
     Ui: "Ui",
     Api: "Api",
+}
+
+const TRADE_TYPE = {
+    MARKET: "MARKET",
+    LIMIT: "LIMIT",
 }
 
 const OrderTypes = {
@@ -24,9 +29,9 @@ function persianNumberToEnglish(persianNumber) {
     return parseFloat(persianjs(persianNumber).persianNumber().toString().replaceAll('٬',''));
 }
 
-async function tableDataScraper(tableBody) {
-    const orderRows = await this.page.$x(tableBody);
+async function tableDataScraper(tableBody, page) {
+    const orderRows = await page.$x(tableBody);
     let columns = await orderRows[0].$$('td');
     return (await Promise.all(columns.map(async column => await column.evaluate(el => el.textContent)))).filter(data => data != "");
 }
-module.exports = {OrderTypes, TestModes, testLoginEmail, persianNumberToEnglish, tableDataScraper, randomNumberInRange}
+module.exports = {OrderTypes, ScrapeModes,TRADE_TYPE, testLoginEmail, persianNumberToEnglish, tableDataScraper, randomNumberInRange}

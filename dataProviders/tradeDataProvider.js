@@ -9,8 +9,8 @@ class TradeDataProvider {
     async uiMarketBuyToken(market) {
         try {
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
+            await this.page.waitForNavigation();
 
-            await this.page.waitForTimeout(5000);
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.orderBtn);
             const marketOrderBtn = await this.page.$x(this.config.tradeDomElements.marketOrder.orderBtn)
             await marketOrderBtn[0].click()
@@ -50,39 +50,33 @@ class TradeDataProvider {
 
     async uiMarketSellToken(market) {
         try {
-            console.log(1)
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForNavigation();
 
-            console.log(2)
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.orderBtn);
             const marketOrderBtn = await this.page.$x(this.config.tradeDomElements.marketOrder.orderBtn)
             await marketOrderBtn[0].click()
 
-            console.log(3)
             await this.page.waitForTimeout(1000);
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.sell.amountBar );
             const sellAmountBar = await this.page.$x(this.config.tradeDomElements.marketOrder.sell.amountBar);
             await sellAmountBar[0].click();
 
-            console.log(4)
             await this.page.waitForTimeout(1000);
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.sell.amountField);
             let sellAmount = await this.page.$x(this.config.tradeDomElements.marketOrder.sell.amountField)
             sellAmount = await this.page.evaluate(el => el.getAttribute('value'), sellAmount[0])
 
-            console.log(5)
             await this.page.waitForTimeout(1000);
             const sellBtn = await this.page.$x(this.config.tradeDomElements.marketOrder.sell.sellBtn)
             await sellBtn[0].click()
             await this.page.waitForTimeout(2000);
 
-            console.log(6)
             await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForNavigation();
+
             await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
 
-            console.log(7)
             let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);
             takerFee = await this.page.evaluate(el => el.textContent, takerFee[0]);
 
@@ -101,8 +95,8 @@ class TradeDataProvider {
     async uiLimitBuyToken(market, limitPrice) {
         try {
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
+            await this.page.waitForTimeout(5000);
 
-            await this.page.waitForTimeout(1000);
             await this.page.waitForXPath( this.config.tradeDomElements.limitOrder.orderBtn);
             const limitOrderBtn = await this.page.$x(this.config.tradeDomElements.limitOrder.orderBtn)
             await limitOrderBtn[0].click()
@@ -131,7 +125,8 @@ class TradeDataProvider {
             await this.page.waitForTimeout(2000);
 
             await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForTimeout(5000);
+
             await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
 
             let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);

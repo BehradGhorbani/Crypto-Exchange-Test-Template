@@ -8,10 +8,10 @@ class OrdersDataProvider {
 
     async uiGetLastOrderByMarketAndTypeBtn(market, type) {
         try {
-            console.log(type)
             await this.page.goto(this.config.routes.url + this.config.routes.marketPath + market);
-            await this.page.waitForTimeout(3000);
+            await this.page.waitForTimeout(5000);
 
+            await this.page.waitForTimeout(5000);
             await this.page.waitForXPath(this.config.ordersTableElements[type].orderBtn);
             const orderTypeBtn = await this.page.$x(this.config.ordersTableElements[type].orderBtn);
             await orderTypeBtn[0].click();
@@ -20,8 +20,8 @@ class OrdersDataProvider {
 
             const ordersFirstPage = [];
             if (tBody.length) {
-                let pureData = (await tableDataScraper(this.config.ordersTableElements[type].body)).map(data => {
-                        const convertedData =  persianNumberToEnglish(data);
+                let pureData = (await tableDataScraper(this.config.ordersTableElements[type].body, this.page)).map(data => {
+                        const convertedData = persianNumberToEnglish(data);
                         if(convertedData) {
                             return convertedData
                         }
@@ -40,7 +40,7 @@ class OrdersDataProvider {
     async uiCancelAllOpenOrdersByMarket(market) {
         try {
             await this.page.goto( this.config.routes.url + this.config.routes.marketPath + market);
-            await this.page.waitForTimeout(3000);
+            await this.page.waitForTimeout(5000);
 
             await this.page.waitForXPath(this.config.ordersTableElements.openOrders.orderBtn);
             const openOrdersBtn = await this.page.$x(this.config.ordersTableElements.openOrders.orderBtn);

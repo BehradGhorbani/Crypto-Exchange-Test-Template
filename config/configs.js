@@ -1,12 +1,13 @@
 const domElements = require('../config/domElements')
-const {TestModes} = require('../utils/util')
+const {ScrapeModes} = require('../utils/util')
 const pairs = require('./pairs')
 const prompt = require('prompt-sync')()
+
 const mainProject = "exnovin"
 
 const configs = {
     exnovin : {
-        mode: TestModes.Ui,
+        mode: ScrapeModes.Ui,
         routes: {
             url: "https://exnovin.io",
             marketPath: "/app/markets/",
@@ -18,8 +19,7 @@ const configs = {
 
         pairs: pairs.exnovin,
         walletAccuracy: 0.08,
-        takerOrdersWeight: 0,
-        makerOrdersWeight: 100,
+        takerOrdersWeightPercent: 50,
         firstMakerOrderWeight: 100,
         makerPricePercent: 0.005,
         orderCompleteTime: 60000,
@@ -29,7 +29,7 @@ const configs = {
         ordersTableElements: domElements.exnovin.ordersTableElements,
         orderBook: domElements.exnovin.orderBook,
         generalElements: domElements.exnovin.generalElements,
-        user: getCredentials(),
+        user: {username: "behradbh128@irandax.com", password: "behradGH1383!"},
     },
 }
 
