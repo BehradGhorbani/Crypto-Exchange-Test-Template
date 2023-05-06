@@ -39,9 +39,9 @@ module.exports = domElements =  {
                 lastOrderAmountField: "//*[@id=\"root\"]/main/div/div[1]/div/div[2]/div/div/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[5]/p",
             },
             openOrders: {
+                orderBtn: "/html/body/div[4]/main/div/div[1]/div/div[2]/div/div/div[2]/div[1]/div/button[1]",
                 columnLength: 10,
                 body: "/html/body/div[4]/main/div/div[1]/div/div[2]/div/div/div[2]/div[2]/div[2]/table/tbody",
-                orderBtn: "/html/body/div[4]/main/div/div[1]/div/div[2]/div/div/div[2]/div[1]/div/button[1]",
                 cancelAllOrdersBtn: "/html/body/div[4]/main/div/div[1]/div/div[2]/div/div/div[2]/div[2]/div[1]/div[1]/button",
                 confirmCancelBtn: "/html/body/div[3]/div/div/div[2]/button[2]"
             }
@@ -75,20 +75,4 @@ module.exports = domElements =  {
             profileUsername: '//*[@id="root"]/main/div/div[1]/div/div[2]/div/div[3]/div/div[1]/div/div[2]/ul/li[1]/p[2]'
         },
     },
-
-    zarindax: {
-        tradeElements: {
-            immediateOrderBtn: "",
-            requestAmountBar: "",
-            requestAmountField: "",
-            buyBtn: "",
-        },
-
-        loginElements: {
-            loginPageBtn: '',
-            usernameField: '',
-            passwordField: '',
-            profileUsername: ''
-        },
-    }
 }

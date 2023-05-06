@@ -1,4 +1,4 @@
-const {TestModes} = require("../utils/util");
+const {ScrapeModes} = require("../utils/util");
 const walletDataProvider = require('../dataProviders/walletDataProvider');
 
 class WalletActions {
@@ -9,7 +9,7 @@ class WalletActions {
     }
 
     async getWallet(token) {
-        if (this.config.mode === TestModes.Ui) {
+        if (this.config.mode === ScrapeModes.Ui) {
             return await this.walletDataProvider.uiGetWallet(token);
         }
     }
