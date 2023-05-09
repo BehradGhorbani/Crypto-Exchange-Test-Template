@@ -29,7 +29,7 @@ const configs = {
         ordersTableElements: domElements.exnovin.ordersTableElements,
         orderBook: domElements.exnovin.orderBook,
         generalElements: domElements.exnovin.generalElements,
-        user: {username: "behradbh128@irandax.com", password: "behradGH1383!"},
+        user: getCredentials(),
     },
 }
 
