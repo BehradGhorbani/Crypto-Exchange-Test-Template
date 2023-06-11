@@ -8,8 +8,9 @@ const mainProject = "exnovin"
 const configs = {
     exnovin : {
         mode: ScrapeModes.Ui,
+        scriptLifeCycle: 50,
         routes: {
-            url: "https://exnovin.io",
+            url: "https://exnovin.irandax.com",
             marketPath: "/app/markets/",
             dashboardPath: "/app/dashboard/",
             loginPath: "/app/login/",
@@ -19,7 +20,7 @@ const configs = {
 
         pairs: pairs.exnovin,
         walletAccuracy: 0.08,
-        takerOrdersWeightPercent: 50,
+        takerOrdersWeightPercent: 100,
         firstMakerOrderWeight: 100,
         makerPricePercent: 0.005,
         orderCompleteTime: 60000,
@@ -29,6 +30,33 @@ const configs = {
         ordersTableElements: domElements.exnovin.ordersTableElements,
         orderBook: domElements.exnovin.orderBook,
         generalElements: domElements.exnovin.generalElements,
+        user: getCredentials(),
+    },
+
+    zarindax : {
+        mode: ScrapeModes.Ui,
+        scriptLifeCycle: 10,
+        routes: {
+            url: "https://trade.zarindax.com",
+            marketPath: "/app/trade/",
+            dashboardPath: "/app/dashboard/",
+            loginPath: "/user/auth/static-password",
+            profilePath: "/app/settings/profile",
+            walletsPath: "/app/wallets/",
+        },
+
+        pairs: pairs.zarindax,
+        walletAccuracy: 0.08,
+        takerOrdersWeightPercent: 100,
+        firstMakerOrderWeight: 100,
+        makerPricePercent: 0.005,
+        orderCompleteTime: 60000,
+        tradeDomElements: domElements.zarindax.tradeElements,
+        loginDomElements: domElements.zarindax.loginElements,
+        walletElements: domElements.zarindax.walletElements,
+        ordersTableElements: domElements.zarindax.ordersTableElements,
+        orderBook: domElements.zarindax.orderBook,
+        generalElements: domElements.zarindax.generalElements,
         user: getCredentials(),
     },
 }

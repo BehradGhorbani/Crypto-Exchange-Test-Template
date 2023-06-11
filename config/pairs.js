@@ -1,9 +1,15 @@
 module.exports = pairs = {
     exnovin: [
-        'BTC_TMN',
+        "USDT_TMN",
+        "BTC_TMN",
+        "BTC_USDT",
     ],
 
     zarindax: [
-        'BTC_TMN',
+        "USDT_TMN",
+        "BTC_TMN",
+        "BTC_USDT",
+        "ETH_TMN",
+        "ETH_USDT"
     ],
 }

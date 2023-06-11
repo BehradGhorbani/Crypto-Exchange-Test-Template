@@ -9,7 +9,7 @@ describe('tradeTest', () => {
     beforeAll(async () => {
         const config = getConfig()
         tradeScript = new tradeScript(config);
-        tradeTestData = await tradeScript.autoTrader(config);
+        tradeTestData = await tradeScript.autoTrader(config, true);
         walletAccuracy = config.walletAccuracy;
     });
 

@@ -17,9 +17,8 @@ class TradeDataProvider {
 
             await this.page.waitForTimeout(1000);
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.buy.amountBar );
-            const buyAmountBar = await this.page.$x(this.config.tradeDomElements.marketOrder.buy.amountBar)
+            const buyAmountBar = await this.page.$x(this.config.tradeDomElements.marketOrder.buy.amountBar);
             await buyAmountBar[0].click()
-
             await this.page.waitForTimeout(1000);
             await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.buy.amountField );
             let buyAmount = await this.page.$x(this.config.tradeDomElements.marketOrder.buy.amountField)
@@ -31,18 +30,18 @@ class TradeDataProvider {
             await purchaseBtn[0].click()
             await this.page.waitForTimeout(2000);
 
-            await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
-            await this.page.waitForTimeout(1000);
-            await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
-            let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);
-            takerFee = await this.page.evaluate(el => el.textContent, takerFee[0]);
-
-            const tradeDataOutput = {
-                buyAmount: persianNumberToEnglish(buyAmount),
-                takerFee: persianNumberToEnglish(takerFee)
-            }
-
-            return tradeDataOutput
+            // await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
+            // await this.page.waitForTimeout(1000);
+            // await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
+            // let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);
+            // takerFee = await this.page.evaluate(el => el.textContent, takerFee[0]);
+            // //
+            // const tradeDataOutput = {
+            //     buyAmount: persianNumberToEnglish(buyAmount),
+            //     takerFee: persianNumberToEnglish(takerFee)
+            // }
+            //
+            return true
         } catch ( err ) {
             console.log( 'error => ', err);
         }
@@ -58,8 +57,9 @@ class TradeDataProvider {
             await marketOrderBtn[0].click()
 
             await this.page.waitForTimeout(1000);
-            await this.page.waitForXPath( this.config.tradeDomElements.marketOrder.sell.amountBar );
-            const sellAmountBar = await this.page.$x(this.config.tradeDomElements.marketOrder.sell.amountBar);
+            const amountBar = market === "USDT_TMN" ? this.config.tradeDomElements.marketOrder.sell.amountBar25 : this.config.tradeDomElements.marketOrder.sell.amountBar
+            await this.page.waitForXPath( amountBar );
+            const sellAmountBar = await this.page.$x(amountBar);
             await sellAmountBar[0].click();
 
             await this.page.waitForTimeout(1000);
@@ -72,21 +72,21 @@ class TradeDataProvider {
             await sellBtn[0].click()
             await this.page.waitForTimeout(2000);
 
-            await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
-            await this.page.waitForTimeout(2000);
+            // await this.page.goto( this.config.routes.url + this.config.routes.dashboardPath);
+            // await this.page.waitForTimeout(2000);
+            //
+            // await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
+            //
+            // let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);
+            // takerFee = await this.page.evaluate(el => el.textContent, takerFee[0]);
+            //
+            // await this.page.waitForTimeout(3000);
+            // const tradeDataOutput = {
+            //     sellAmount: persianNumberToEnglish(sellAmount),
+            //     takerFee: persianNumberToEnglish(takerFee)
+            // }
 
-            await this.page.waitForXPath( this.config.generalElements.takerFeeElement);
-
-            let takerFee = await this.page.$x(this.config.generalElements.takerFeeElement);
-            takerFee = await this.page.evaluate(el => el.textContent, takerFee[0]);
-
-            await this.page.waitForTimeout(3000);
-            const tradeDataOutput = {
-                sellAmount: persianNumberToEnglish(sellAmount),
-                takerFee: persianNumberToEnglish(takerFee)
-            }
-
-            return tradeDataOutput
+            return true
         } catch ( err ) {
             console.log( 'error => ', err);
         }

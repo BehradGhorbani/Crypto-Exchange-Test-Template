@@ -5,9 +5,9 @@ const cron = require("node-cron");
 try {
         const config = getConfig()
         tradeScript = new tradeScript(config)
-        cron.schedule("*/3 * * * *", async () => {
-                await tradeScript.autoTrader()
-        });
+        // cron.schedule("* * * * *", async () => {
+            tradeScript.autoTrader(false)
+        // });
 } catch (e) {
-        console.log(e)
+        console.log(e);
 }

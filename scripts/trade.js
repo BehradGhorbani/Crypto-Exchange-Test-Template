@@ -11,8 +11,9 @@ class TradeScript {
         this.config = config;
     }
 
-    async autoTrader() {
-        this.browser = await puppeteer.launch({headless: false, slowMo: 30})
+    async autoTrader(testMode) {
+        this.testMode = testMode;
+        this.browser = await puppeteer.launch({headless: false, slowMo: 0})
         this.page = await this.browser.newPage()
         this.loginActions = await loginActions(this.page, this.config);
         this.tradeActions = await tradeActions(this.page, this.config);
@@ -44,84 +45,81 @@ class TradeScript {
 
         const tradeData = []
 
-        for (const pair of this.config.pairs) {
-            console.log("start of trading")
-            const tokens = pair.split('_');
+        for (let i = 0  ;i < this.config.scriptLifeCycle; i++) {
+            console.log('iteration ' + i)
+            for (const pair of this.config.pairs) {
+                console.log(pair)
+                const tokens = pair.split('_');
 
-            const lowestSellOrder = (await this.orderBookActions.getSalesPricesByMarket(pair)).at(-1);
-            const highestBuyOrder = (await this.orderBookActions.getBuysPricesByMarket(pair)).at(1);
-            const lowestSellPrice = lowestSellOrder.at(orderBookPriceIndex);
-            const highestBuyPrice = highestBuyOrder.at(orderBookPriceIndex);
-            const orderTypeWeight = randomNumberInRange(0, 100);
+                const lowestSellOrder = (await this.orderBookActions.getSalesPricesByMarket(pair)).at(-1);
+                const highestBuyOrder = (await this.orderBookActions.getBuysPricesByMarket(pair)).at(1);
+                const lowestSellPrice = lowestSellOrder.at(orderBookPriceIndex);
+                const highestBuyPrice = highestBuyOrder.at(orderBookPriceIndex);
+                const orderTypeWeight = randomNumberInRange(0, 100);
 
-            if (orderTypeWeight <= takerOrdersWeightPercent) {
-                //Set Market Order
-                let toBuyTokenWalletBeforeOrder = await this.walletActions.getWallet(tokens[0]);
-                console.log('before wall', toBuyTokenWalletBeforeOrder)
-                let {buyAmount, takerFee} = await this.tradeActions.uiMarketBuyToken(pair);
-                buyAmount = buyAmount - (buyAmount * takerFee / 100);
+                if (orderTypeWeight <= takerOrdersWeightPercent) {
+                    //Set Market Order
+                    let toBuyTokenWalletBeforeOrder = this.testMode && await this.walletActions.getWallet(tokens[0]);
+                    let {buyAmount, takerFee} = await this.tradeActions.uiMarketBuyToken(pair);
+                    if (this.testMode) {
+                        buyAmount = buyAmount - (buyAmount * takerFee / 100);
 
-                console.log('buy amount', buyAmount)
+                        await this.page.waitForTimeout(10000);
 
-                await this.page.waitForTimeout(10000);
+                        const toBuyTokenWalletAfterOrder = await this.walletActions.getWallet(tokens[0]);
 
-                const toBuyTokenWalletAfterOrder = await this.walletActions.getWallet(tokens[0]);
-                console.log('after order', toBuyTokenWalletAfterOrder);
+                        const expectedBoughtAmount = toBuyTokenWalletBeforeOrder.assets + buyAmount;
+                        const allAssetsAfterOrder = toBuyTokenWalletAfterOrder.assets;
+                        const amountDiffPercent = (Math.abs(allAssetsAfterOrder - expectedBoughtAmount) / ((allAssetsAfterOrder + expectedBoughtAmount) / 2)) * 100;
+                        await this.page.waitForTimeout(1000);
 
-                const expectedBoughtAmount = toBuyTokenWalletBeforeOrder.assets + buyAmount;
-                const allAssetsAfterOrder = toBuyTokenWalletAfterOrder.assets;
-                const amountDiffPercent = (Math.abs(allAssetsAfterOrder - expectedBoughtAmount) / ((allAssetsAfterOrder + expectedBoughtAmount) / 2)) * 100;
-                console.log(amountDiffPercent)
-                await this.page.waitForTimeout(1000);
+                        const marketResult = {
+                            type: TRADE_TYPE.MARKET,
+                            pair,
+                            baseBuyAmount: buyAmount,
+                            walletDifference: amountDiffPercent
+                        }
 
-                console.log('pair', pair)
-                await this.tradeActions.uiMarketSellToken(pair);
-
-                const marketResult = {
-                    type: TRADE_TYPE.MARKET,
-                    pair,
-                    baseBuyAmount: buyAmount,
-                    walletDifference: amountDiffPercent
-                }
-                tradeData.push(marketResult)
-            } else {
-                //Set limit Order
-                const makerOrderWeight = randomNumberInRange(0, 100);
-                let buyPrice;
-
-                if (makerOrderWeight <= firstMakerOrderWeight) {
-                    buyPrice = randomNumberInRange(highestBuyPrice, lowestSellPrice);
-                } else {
-                    buyPrice = Math.round(lowestSellPrice - (lowestSellPrice * makerPricePercent));
-                }
-
-                console.log({buyPrice, pair})
-                await this.tradeActions.uiLimitBuyToken(pair, buyPrice);
-
-                await this.page.waitForTimeout(this.config.orderCompleteTime);
-
-                const existingOrders = await this.orderActions.getLastOrderByMarketAndTypeBtn(pair, OrderTypes.OPEN_ORDERS);
-                if (existingOrders.length > 0) {
-                    await this.orderActions.cancelAllOpenOrdersByMarket(pair);
-                    console.log('cancel orders')
-                } else {
+                        tradeData.push(marketResult)
+                    }
                     await this.tradeActions.uiMarketSellToken(pair);
-                }
+                } else {
+                    //Set limit Order
+                    const makerOrderWeight = randomNumberInRange(0, 100);
+                    let buyPrice;
 
-                const limitResult = {
-                    type: TRADE_TYPE.LIMIT,
-                    pair,
-                    lowestSellPrice,
-                    highestBuyPrice
+                    if (makerOrderWeight <= firstMakerOrderWeight) {
+                        buyPrice = randomNumberInRange(highestBuyPrice, lowestSellPrice);
+                    } else {
+                        buyPrice = Math.round(lowestSellPrice - (lowestSellPrice * makerPricePercent));
+                    }
+
+                    await this.tradeActions.uiLimitBuyToken(pair, buyPrice);
+
+                    await this.page.waitForTimeout(this.config.orderCompleteTime);
+
+                    const existingOrders = await this.orderActions.getLastOrderByMarketAndTypeBtn(pair, OrderTypes.OPEN_ORDERS);
+                    if (existingOrders.length > 0) {
+                        await this.orderActions.cancelAllOpenOrdersByMarket(pair);
+                    } else {
+                        await this.tradeActions.uiMarketSellToken(pair);
+                    }
+
+                    if (this.testMode) {
+                        const limitResult = {
+                            type: TRADE_TYPE.LIMIT,
+                            pair,
+                            lowestSellPrice,
+                            highestBuyPrice
+                        };
+                        tradeData.push(limitResult);
+                    }
                 }
-                tradeData.push(limitResult)
             }
         }
-        console.log('befClose')
-        await this.page.close();
-        await this.browser.close();
-        console.log('afterClose')
-        return true
+        // await this.page.close();
+        // await this.browser.close();
+        return tradeData
     }
 }
 
